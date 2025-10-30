@@ -2,7 +2,7 @@
 
 LOCAL_PATH="/usr/local/murkmod/mushm.sh"
 VERSION_FILE="/mnt/stateful_partition/murkmod/mushver"
-REMOTE_VERSION_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushver"
+REMOTE_VERSION_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushver.vr"
 REMOTE_MUSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
 TMP_PATH="/tmp/mushm_latest.sh"
 
