@@ -22,7 +22,7 @@ MUSH_FILE="$MURK_DIR/mushm.sh"
 VERSION_FILE="$MURK_DIR/mushver"
 BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
 REMOTE_MUSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
-REMOTE_CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
+REMOTE_CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/crosh_updater.sh"
 
 # Create necessary directories
 log "Creating directories..."
