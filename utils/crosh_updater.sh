@@ -2,7 +2,8 @@
 
 cd /
 cd mnt/stateful_partition/
-mkdir murkmod/mushm/
+sudo mkdir murkmod/mushm/
+cd murkmod/mushm
 curl -O https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh
 cd /
 
