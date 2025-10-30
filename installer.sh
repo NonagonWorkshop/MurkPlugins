@@ -8,7 +8,7 @@ touch cros-bak.sh
 cat crosh > cros-bak.sh
 sleep 1
 echo "Getting MushM"
-curl -O https://raw.githubusercontent.com/Star-destroyer12/Murk-mod-plugins/main/utils/mushm.sh
+curl -O https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh
 cat mushm.sh > crosh
 cd /
 sleep 1
