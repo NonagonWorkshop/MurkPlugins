@@ -450,7 +450,7 @@ do_updates() {
 }
 
 do_mushm_update() {
-    doas "bash <(curl -SLk https://raw.githubusercontent.com/Star-destroyer12/Murk-mod-plugins/main/installer.sh)"
+    doas "bash <(curl -SLk https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/installer.sh)"
     exit
 }
 
