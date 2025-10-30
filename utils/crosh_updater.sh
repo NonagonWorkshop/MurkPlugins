@@ -6,7 +6,7 @@ doas() {
 
 cd /
 cd mnt/stateful_partition/
-doas "sudo mkdir murkmod/mushm/"
+doas "sudo mkdir /murkmod/mushm/"
 cd murkmod/mushm
 doas "curl -O https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
 cd /
