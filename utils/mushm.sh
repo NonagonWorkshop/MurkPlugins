@@ -528,7 +528,7 @@ show_plugins() {
 install_plugins() {
     clear
     echo "Fetching plugin information..."
-    json=$(curl -s "https://api.github.com/repos/Star-destroyer12/Murk-mod-plugins/contents/plugins")
+    json=$(curl -s "https://api.github.com/repos/NonagonWorkshop/MurkPlugins/contents/plugins")
     file_contents=()
     download_urls=()
 
