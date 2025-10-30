@@ -189,7 +189,7 @@ EOF
         208) runjob api_ls_dir ;;
         209) runjob api_cd ;;
     
-        *) echo && echo "Invalid option, dipshit." && echo ;;
+        *) echo && echo "Invalid option." && echo ;;
         esac
     done
 }
