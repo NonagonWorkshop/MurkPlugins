@@ -28,10 +28,10 @@ traps() {
 }
 
 mushm_info() {
-    echo -ne "\033]0;mushM\007"
+    echo -ne "\033]0;mushm\007"
     if [ ! -f /mnt/stateful_partition/custom_greeting ]; then
         cat <<-EOF
-Welcome to mushM, A Custom Developer Shell for MurkMod
+Welcome to mushm, A Custom Developer Shell for MurkMod
 
 If you ended up here by accident, don’t worry! Simply close this tab and you’ll be good to go.
 
@@ -138,7 +138,7 @@ main() {
 (25) [EXPERIMENTAL] Install Chromebrew
 (26) [EXPERIMENTAL] Firmware Utility
 (27) Check for updates Murkmod
-(28) Check for updates MushM
+(28) Check for updates mushm
 EOF
         
         swallow_stdin
@@ -409,19 +409,19 @@ autodisableexts() {
 set_passwd() {
   echo "Enter a new password to use for mushm. This will be required to perform any future administrative actions, so make sure you write it down somewhere!"
   read -r -p " > " newpassword
-  doas "touch /mnt/stateful_partition/murkmod/mushM_password"
-  doas "echo '$newpassword'> /mnt/stateful_partition/murkmod/mushM_password"
+  doas "touch /mnt/stateful_partition/murkmod/mushm_password"
+  doas "echo '$newpassword'> /mnt/stateful_partition/murkmod/mushm_password"
 }
 
 remove_passwd() {
   echo "Removing password from mushm..."
-  doas "rm -f /mnt/stateful_partition/murkmod/mushM_password"
+  doas "rm -f /mnt/stateful_partition/murkmod/mushm_password"
 }
 
 prompt_passwd() {
   echo "Enter your password:"
   read -r -p " > " password
-  stored_password=$(cat /mnt/stateful_partition/murkmod/mushM_password)
+  stored_password=$(cat /mnt/stateful_partition/murkmod/mushm_password)
   
   if [ "$password" == "$stored_password" ]; then
     main
