@@ -8,8 +8,8 @@ cd /
 cd mnt/stateful_partition/
 doas "sudo mkdir murkmod/mushm/"
 cd murkmod/mushm
-curl -O https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh
+doas "curl -O https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
 cd /
 
 # Launch Mush
-exec bash mnt/stateful_partition/murkmod/mushm/mushm.sh
+doas "exec bash mnt/stateful_partition/murkmod/mushm/mushm.sh"
