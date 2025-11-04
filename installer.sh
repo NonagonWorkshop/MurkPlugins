@@ -23,11 +23,6 @@ MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/ut
 log "Creating directories..."
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
 
-if [[ ! -f "$VERSION_FILE" ]]; then
-    echo "0.0.0" > "$VERSION_FILE"
-    log "Created version file: $VERSION_FILE (0.0.0)"
-fi
-
 log "Installing MushM"
 curl -fsSLo "$CROSH" "$MushMM_URL" || error "Failed to download MushM"
 
