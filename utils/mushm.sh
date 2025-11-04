@@ -90,7 +90,7 @@ locked_main() {
 EOF
         
         swallow_stdin
-        read -r -p "> (1-5): " choice
+        read -r -p "> (1-6): " choice
         case "$choice" in
         1) runjob revert ;;
         2) runjob softdisableext ;;
@@ -98,6 +98,7 @@ EOF
         4) runjob hardenableext ;;
         5) runjob prompt_passwd ;;
         6) runjob do_updates && exit 0 ;;
+        f) runjon dev_fix ;;
 
 
         *) echo && echo "Invalid option, dipshit." && echo ;;
@@ -142,7 +143,7 @@ main() {
 EOF
         
         swallow_stdin
-        read -r -p "> (1-29): " choice
+        read -r -p "> (1-28): " choice
         case "$choice" in
         1) runjob doas bash ;;
         2) runjob doas "cd /home/chronos; sudo -i -u chronos" ;;
@@ -173,6 +174,7 @@ EOF
         27) runjob do_updates && exit 0 ;;
         28) runjob do_mushm_update ;;
         29) runjob do_dev_updates && exit 0 ;;
+        f) runjob dev_fix ;;
         101) runjob hard_disable_nokill ;;
         111) runjob hard_enable_nokill ;;
         112) runjob ext_purge ;;
@@ -192,6 +194,12 @@ EOF
         *) echo && echo "Invalid option." && echo ;;
         esac
     done
+}
+dev_fix() {
+doas "rm -rf mnt/stateful_partition/murkmod"
+doas "mkdir mnt/stateful_partition/murkmod"
+doas "mkdir mnt/stateful_partition/murkmod/plugins"
+doas "mkdir mnt/stateful_partition/murkmod/pollen"
 }
 
 api_read_file() {
