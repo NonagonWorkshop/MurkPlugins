@@ -19,7 +19,7 @@ CROSH="/usr/bin/crosh"
 MURK_DIR="/mnt/stateful_partition/murkmod"
 BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
 MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
-CROSH_URL=""
+CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/crosh.sh"
 
 log "Creating directories..."
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
