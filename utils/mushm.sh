@@ -196,7 +196,7 @@ EOF
     done
 }
 dev_fix() {
-doas "rm -rf mnt/stateful_partition/murkmod"
+doas "cd / && rm -rf mnt/stateful_partition/murkmod"
 doas "mkdir mnt/stateful_partition/murkmod"
 doas "mkdir mnt/stateful_partition/murkmod/plugins"
 doas "mkdir mnt/stateful_partition/murkmod/pollen"
