@@ -19,16 +19,16 @@ CROSH="/usr/bin/crosh"
 MURK_DIR="/mnt/stateful_partition/murkmod"
 BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
 MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
-CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/crosh.sh"
+# CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/crosh.sh"
 
 log "Creating directories..."
-mkdir -p "$MURK_DIR/mush"
-touch "$MURK_DIR/mush/mushm.sh"
+# mkdir -p "$MURK_DIR/mush"
+# touch "$MURK_DIR/mush/mushm.sh"
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
 
 log "Installing MushM"
-curl -fsSLo "$CROSH" "$CROSH_URL" || error "Failed to download Pacher"
-curl -fsSLo "$MURK_DIR/mush/mushm.sh" "MUSHM_URL" || error "Failed to download MushM"
+curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download Pacher"
+# curl -fsSLo "$MURK_DIR/mush/mushm.sh" "MUSHM_URL" || error "Failed to download MushM"
 
 if [[ -w "$(dirname "$BOOT_MSG")" ]]; then
     log "Customizing boot message..."
