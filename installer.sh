@@ -24,7 +24,7 @@ log "Creating directories..."
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
 
 log "Installing MushM"
-curl -fsSLo "$CROSH" "$MushMM_URL" || error "Failed to download MushM"
+curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download MushM"
 
 if [[ -w "$(dirname "$BOOT_MSG")" ]]; then
     log "Customizing boot message..."
