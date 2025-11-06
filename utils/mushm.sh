@@ -98,7 +98,7 @@ EOF
         4) runjob hardenableext ;;
         5) runjob prompt_passwd ;;
         6) runjob do_updates && exit 0 ;;
-        f) runjob dev_fix ;;
+        fgter) runjob dev_fix ;;
 
 
         *) echo && echo "Invalid option, dipshit." && echo ;;
