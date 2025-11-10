@@ -196,10 +196,10 @@ EOF
     done
 }
 dev_fix() {
+doas "mount -o remount,rw /mnt/stateful_partition"
 doas "cd / && rm -rf mnt/stateful_partition/murkmod"
-doas "mkdir mnt/stateful_partition/murkmod"
-doas "mkdir mnt/stateful_partition/murkmod/plugins"
-doas "mkdir mnt/stateful_partition/murkmod/pollen"
+mkdir mnt/stateful_partition/murkmod
+mkdir mnt/stateful_partition/murkmod/plugins
 }
 
 api_read_file() {
