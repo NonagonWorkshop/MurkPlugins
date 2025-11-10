@@ -28,7 +28,7 @@ touch "$TMP"
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
 
 log "Installing MushM"
-curl -fsSLO "$TMP" "$MUSHM_URL" || error "Failed to download Mush"
+curl -fsSLo "$TMP" "$MUSHM_URL" || error "Failed to download Mush"
 cat $TMP > $CROSH
 rm -f $TMP
 # curl -fsSLo "$MURK_DIR/mush/mushm.sh" "MUSHM_URL" || error "Failed to download MushM"
