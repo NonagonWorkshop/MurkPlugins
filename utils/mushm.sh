@@ -140,6 +140,7 @@ main() {
 (26) [EXPERIMENTAL] Firmware Utility
 (27) Check for updates Murkmod
 (28) Check for updates MushM
+(29) Tetris
 EOF
         
         swallow_stdin
@@ -173,8 +174,9 @@ EOF
         26) runjob run_firmware_util ;;
         27) runjob do_updates && exit 0 ;;
         28) runjob do_mushm_update ;;
-        29) runjob do_dev_updates && exit 0 ;;
+        400) runjob do_dev_updates && exit 0 ;;
         f) runjob dev_fix ;;
+        29) runjob 
         101) runjob hard_disable_nokill ;;
         111) runjob hard_enable_nokill ;;
         112) runjob ext_purge ;;
