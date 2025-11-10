@@ -23,7 +23,7 @@ MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/ut
 # CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/crosh.sh"
 
 log "Creating directories..."
-# bruvvvvvvvv
+# bruvvvvvvvv updateeeeeee
 touch "$TMP"
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
 
