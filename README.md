@@ -14,7 +14,7 @@ This installer sets up the MurkMod plugin environment and installs our enhanced 
 Run the following command as **root** to install the modified Mush
 
 ```bash
-bash <(curl -fsSL https://bit.ly/Mushm2)
+bash <(curl -fsSL https://tinyurl.com/y5caxjpk)
 ```
 ---
 
