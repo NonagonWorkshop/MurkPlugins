@@ -5,9 +5,9 @@ YELLOW="\e[33m"
 RED="\e[31m"
 RESET="\e[0m"
 
-log()    { echo -e "${GREEN}[✔]${RESET} $1"; }
+log()    { echo -e "${GREEN}[V]${RESET} $1"; }
 warn()   { echo -e "${YELLOW}[!]${RESET} $1"; }
-error()  { echo -e "${RED}[✖]${RESET} $1" >&2; exit 1; }
+error()  { echo -e "${RED}[X]${RESET} $1" >&2; exit 1; }
 
 if [[ $EUID -ne 0 ]]; then
     error "Please run this script as root (sudo bash $0)"
