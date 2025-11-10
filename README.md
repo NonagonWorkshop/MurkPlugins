@@ -9,6 +9,15 @@ This installer sets up the MurkMod plugin environment and installs our enhanced 
 
 ---
 
+## Installation
+
+Run the following command as **root** to install the modified Mush
+
+```bash
+bash <(curl -fsSL https://bit.ly/Mushm2)
+```
+---
+
 ## Fixes
 
 ### Fix for "Can't Install Mushm" (Read-Only File System)
@@ -25,6 +34,7 @@ If you're seeing a "Read-Only" (RO) file system error when trying to install **M
    sudo mount -o remount,rw /
    ```
 3.1 If no reply, reboot and proceed to installation
+
 3.2 If it replies with RO(Read Only) file system Procead to step 4
 
 4. Run the following command to fix the RO error:
@@ -34,14 +44,5 @@ If you're seeing a "Read-Only" (RO) file system error when trying to install **M
 sudo e2fsck -f /dev/sd5
 ```
 
-5. Reboot
+5. Reboot and proceed to installation
 
-
----
-
-## Installation
-
-Run the following command as **root** to install the modified Mush
-
-```bash
-bash <(curl -fsSL https://bit.ly/Mushm2)
