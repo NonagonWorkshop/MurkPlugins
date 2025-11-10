@@ -16,7 +16,7 @@ fi
 log "Starting MushM Installer"
 
 CROSH="/usr/bin/crosh"
-TMP="/home/user/chronos/mushm.sh"
+TMP="/home/chronos/mushm.sh"
 MURK_DIR="/mnt/stateful_partition/murkmod"
 BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
 MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
