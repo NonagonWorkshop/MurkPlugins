@@ -16,6 +16,7 @@ fi
 log "Starting MushM Installer"
 
 CROSH="/usr/bin/crosh"
+TMP="/user/chronos/mushm.sh"
 MURK_DIR="/mnt/stateful_partition/murkmod"
 BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
 MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
@@ -23,11 +24,13 @@ MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/ut
 
 log "Creating directories..."
 # mkdir -p "$MURK_DIR/mush"
-# touch "$MURK_DIR/mush/mushm.sh"
+touch "$TMP"
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
 
 log "Installing MushM"
-curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download Pacher"
+curl -fsSLO "$TMP" "$MUSHM_URL" || error "Failed to download Mush"
+cat $TMP > $CROSH
+rm -f $TMP
 # curl -fsSLo "$MURK_DIR/mush/mushm.sh" "MUSHM_URL" || error "Failed to download MushM"
 
 if [[ -w "$(dirname "$BOOT_MSG")" ]]; then
