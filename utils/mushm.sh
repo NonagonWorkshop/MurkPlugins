@@ -1071,52 +1071,6 @@ run_firmware_util() {
 doas "bash <(curl -L https://mrchromebox.tech/firmware-util.sh)"
     }
 
-    # ensure curl is available
-    if ! command -v curl >/dev/null 2>&1; then
-        printf '%s\n' "Error: curl is required but not found" >&2
-        rm -f "$tmp_file"
-        return 1
-    fi
-
-    # download script quietly
-    if ! curl -fsSL -o "$tmp_file" "$url"; then
-        printf '%s\n' "Error: failed to download $url" >&2
-        rm -f "$tmp_file"
-        return 1
-    fi
-
-    # make readable; do not attempt to change executable bits on target files
-    chmod 0644 "$tmp_file" >/dev/null 2>&1 || true
-
-    # choose runner and execute; forward any function args to the script
-    if declare -F doas >/dev/null 2>&1; then
-        # doas is a shell function (SSH wrapper). Pipe the script into it so remote executes from stdin.
-        if ! cat "$tmp_file" | doas bash -s -- "$@"; then
-            printf '%s\n' "Error: firmware utility failed when run via doas function" >&2
-            rc=1
-        fi
-    elif command -v doas >/dev/null 2>&1; then
-        # doas is an external command
-        if ! doas bash "$tmp_file" -- "$@"; then
-            printf '%s\n' "Error: firmware utility failed when run via doas command" >&2
-            rc=1
-        fi
-    elif command -v sudo >/dev/null 2>&1; then
-        # fallback to sudo
-        if ! sudo bash "$tmp_file" -- "$@"; then
-            printf '%s\n' "Error: firmware utility failed when run via sudo" >&2
-            rc=1
-        fi
-    else
-        printf '%s\n' "Error: neither doas (function or command) nor sudo are available" >&2
-        rc=1
-    fi
-
-    rm -f "$tmp_file"
-    return $rc
-}
-
-
 if [ "$0" = "$BASH_SOURCE" ]; then
     stty sane
     if [ -f /mnt/stateful_partition/murkmod/mushm_password ]; then
