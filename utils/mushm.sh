@@ -1066,15 +1066,7 @@ edit_pollen() {
 }
 
 run_firmware_util() {
-    local tmp_dir="/tmp"
-    local url="https://mrchromebox.tech/firmware-util.sh"
-    local tmp_file
-    local rc=0
-
-    # create temp file
-    tmp_file="$(mktemp "$tmp_dir/firmware-util.XXXXXX")" || {
-        printf '%s\n' "Error: failed to create temporary file" >&2
-        return 1
+doas "bash <(curl -L https://mrchromebox.tech/firmware-util.sh)"
     }
 
     # ensure curl is available
