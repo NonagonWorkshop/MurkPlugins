@@ -40,8 +40,8 @@ If you're seeing a "Read-Only" (RO) file system error when trying to install **M
 4. Run the following command to fix the RO error:
 
 ```bash
-# replace /dev/sd5 with the directory from step 3
-sudo e2fsck -f /dev/sd5
+# replace /dev/mmcblk1p5 with the directory from step 3
+e2fsck -f /dev/mmcblk1p5
 ```
 
 5. Reboot and proceed to installation
