@@ -44,5 +44,5 @@ else
 fi
 
 log "Installation complete!"
-echo -e "${YELLOW}Made by Rainstorm, modified by Star_destroyer11${RESET}"
+echo -e "${YELLOW}Made by Star_destroyer11${RESET}"
 echo -e "${GREEN}MushM installed. Have Fun${RESET}"
