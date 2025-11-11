@@ -98,7 +98,7 @@ EOF
         3) runjob harddisableext ;;
         4) runjob hardenableext ;;
         5) runjob prompt_passwd ;;
-        6) runjob do_updates && exit 0 ;;
+        6) runjob do_s && exit 0 ;;
         fgter) runjob dev_fix ;;
 
 
@@ -113,10 +113,10 @@ main() {
     while true; do
         echo -ne "\033]0;mushm\007"
         cat <<-EOF
-(1) Root Shell
-(2) Chronos Shell
-(3) Crosh
-(4) Plugins
+(1) Root Shell                     (26) [EXPERIMENTAL] Firmware Utility
+(2) Chronos Shell                  (27) Check for updates Murkmod
+(3) Crosh                          (28) Check for updates MushM
+(4) Plugins                        (29) Tetris
 (5) Install plugins
 (6) Uninstall plugins
 (7) Powerwash
@@ -138,10 +138,6 @@ main() {
 (23) [EXPERIMENTAL] Update Emergency Backup
 (24) [EXPERIMENTAL] Restore Emergency Backup Backup
 (25) [EXPERIMENTAL] Install Chromebrew
-(26) [EXPERIMENTAL] Firmware Utility
-(27) Check for updates Murkmod
-(28) Check for updates MushM
-(29) Tetris
 EOF
         
         swallow_stdin
@@ -467,7 +463,7 @@ do_updates() {
 }
 
 do_mushm_update() {
-    doas "bash <(curl -SLk https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/installer.sh)"
+    doas "bash <(curl -fsSL https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/installer.sh)"
     exit
 }
 
