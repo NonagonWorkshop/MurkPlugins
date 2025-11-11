@@ -107,7 +107,7 @@ EOF
     done
 }
 
-main() {
+dumb_ass_mode() {
     traps
     mushm_info
     while true; do
@@ -249,11 +249,11 @@ bash /mnt/stateful_partition/murkmod/teter/teteris.sh
 }
 
 endam() {
-doas touch /mnt/stateful_partition/murkmod/dumb_ass_mode
+doas touch /mnt/stateful_partition/murkmod/dumbassmode
 }
 
 undam() {
-doas rm -f /mnt/stateful_partition/murkmod/dumb_ass_mode
+doas rm -f /mnt/stateful_partition/murkmod/dumbassmode
 }
 
 api_read_file() {
