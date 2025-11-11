@@ -122,7 +122,6 @@ dumb_ass_mode() {
 (10) Remove mushm password
 (11) Reboot (wait 5s)
 (12) Tertis
-(13) Advanced Mode
 EOF
         
         swallow_stdin
