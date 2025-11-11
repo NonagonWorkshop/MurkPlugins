@@ -1,32 +1,11 @@
 #!/bin/bash
 
-# Tetris game written in pure bash
-#
-# I tried to mimic as close as possible original tetris game
-# which was implemented on old soviet DVK computers (PDP-11 clones)
-#
-# Videos of this tetris can be found here:
-#
-# http://www.youtube.com/watch?v=O0gAgQQHFcQ
-# http://www.youtube.com/watch?v=iIQc1F3UuV4
-#
-# This script was created on ubuntu 13.04 x64 and bash 4.2.45(1)-release.
-# It was not tested on other unix like operating systems.
-#
-# Enjoy :-)!
-#
-# Author: Kirill Timofeev <kt97679@gmail.com>
 
-set -u # non initialized variable is an error
+set -u
 
-# 2 signals are used: SIGUSR1 to decrease delay after level up and SIGUSR2 to quit
-# they are sent to all instances of this script
-# because of that we should process them in each instance
-# in this instance we are ignoring both signals
+
 trap '' SIGUSR1 SIGUSR2
 
-# Those are commands sent to controller by key press processing code
-# In controller they are used as index to retrieve actual functuon from array
 QUIT=0
 RIGHT=1
 LEFT=2
@@ -37,10 +16,10 @@ TOGGLE_HELP=6
 TOGGLE_NEXT=7
 TOGGLE_COLOR=8
 
-DELAY=1          # initial delay between piece movements
-DELAY_FACTOR=0.8 # this value controld delay decrease for each level up
+DELAY=1          
+DELAY_FACTOR=0.8 
 
-# color codes
+
 RED=1
 GREEN=2
 YELLOW=3
