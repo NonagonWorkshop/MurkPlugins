@@ -241,7 +241,6 @@ mkdir mnt/stateful_partition/murkmod/plugins
 
 teter() {
 doas mkdir /mnt/stateful_partition/murkmod/teter
-doas touch /mnt/stateful_partition/murkmod/teter/teteris.sh
 curl -o /mnt/stateful_partition/murkmod/teter/teteris.sh https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/games/tetris.sh
 bash /mnt/stateful_partition/murkmod/teter/teteris.sh
 }
