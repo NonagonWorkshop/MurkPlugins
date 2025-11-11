@@ -18,6 +18,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/
 ```
 ---
 
+#Fechers
+```bash
++ FM Util Script
++ Reboot
++ Tertis
+```
+---
+
 ## Fixes
 
 ### Fix for "Can't Install Mushm" (Read-Only File System)
