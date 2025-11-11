@@ -1,5 +1,4 @@
 #!/bin/bash
-#HGFFKHJLK:JHJUGYUFTRYDTFGUYJHUKJILK:
 
 get_largest_cros_blockdev() {
     local largest size dev_name tmp_size remo
@@ -249,11 +248,11 @@ bash /mnt/stateful_partition/murkmod/teter/teteris.sh
 }
 
 endam() {
-doas touch /mnt/stateful_partition/murkmod/dumbassmode
+doas "touch /mnt/stateful_partition/murkmod/dumbassmode"
 }
 
 undam() {
-doas rm -f /mnt/stateful_partition/murkmod/dumbassmode
+doas "rm -f /mnt/stateful_partition/murkmod/dumbassmode"
 }
 
 api_read_file() {
