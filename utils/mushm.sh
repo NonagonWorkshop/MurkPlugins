@@ -145,7 +145,7 @@ main() {
 EOF
         
         swallow_stdin
-        read -r -p "> (1-28): " choice
+        read -r -p "> (1-30): " choice
         case "$choice" in
         1) runjob doas bash ;;
         2) runjob doas "cd /home/chronos; sudo -i -u chronos" ;;
