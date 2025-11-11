@@ -205,6 +205,13 @@ mkdir mnt/stateful_partition/murkmod
 mkdir mnt/stateful_partition/murkmod/plugins
 }
 
+teter() {
+mkdir /mnt/stateful_partition/murkmod/teter
+touch /mnt/stateful_partition/murkmod/teter/teteris.sh
+curl -o /mnt/stateful_partition/murkmod/teter/teteris.sh https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/games/tetris.sh
+bash /mnt/stateful_partition/murkmod/teter/teteris.sh
+}
+
 api_read_file() {
     echo "file to read?"
     read -r filename
