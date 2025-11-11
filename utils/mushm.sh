@@ -199,15 +199,14 @@ EOF
     done
 }
 dev_fix() {
-doas "mount -o remount,rw /mnt/stateful_partition"
-doas "cd / && rm -rf mnt/stateful_partition/murkmod"
+doas cd / && rm -rf mnt/stateful_partition/murkmod
 mkdir mnt/stateful_partition/murkmod
 mkdir mnt/stateful_partition/murkmod/plugins
 }
 
 teter() {
-mkdir /mnt/stateful_partition/murkmod/teter
-touch /mnt/stateful_partition/murkmod/teter/teteris.sh
+doas mkdir /mnt/stateful_partition/murkmod/teter
+doas touch /mnt/stateful_partition/murkmod/teter/teteris.sh
 curl -o /mnt/stateful_partition/murkmod/teter/teteris.sh https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/games/tetris.sh
 bash /mnt/stateful_partition/murkmod/teter/teteris.sh
 }
