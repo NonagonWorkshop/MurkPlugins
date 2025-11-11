@@ -14,22 +14,22 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 log "Starting MushM Installer"
+sleep 1
 
 CROSH="/usr/bin/crosh"
 MURK_DIR="/mnt/stateful_partition/murkmod"
 BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
 MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
-# CROSH_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/crosh.sh"
+
 
 log "Creating directories..."
 mkdir -p "$MURK_DIR/mush"
-# mkdir -p "$MURK_DIR/mush"
-# touch "$MURK_DIR/mush/mushm.sh"
 mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
+sleep 1
 
 log "Installing MushM"
 curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download MushM"
-# curl -fsSLo "$MURK_DIR/mush/mushm.sh" "MUSHM_URL" || error "Failed to download MushM"
+sleep 1
 
 if [[ -w "$(dirname "$BOOT_MSG")" ]]; then
     log "Customizing boot message..."
@@ -40,6 +40,7 @@ EOF
 else
     warn "Cannot modify boot message (permission denied or path missing)"
 fi
+sleep 1
 
 log "Installation complete!"
 echo -e "${YELLOW}Made by Star_destroyer11${RESET}"
