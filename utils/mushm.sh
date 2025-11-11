@@ -113,11 +113,51 @@ main() {
     while true; do
         echo -ne "\033]0;mushm\007"
         cat <<-EOF
+(1) Crosh
+(2) Plugins
+(3) Install plugins
+(4) Uninstall plugins
+(5) Soft Disable Extensions
+(8) Automagically Disable Extensions
+(9) Set mushm password
+(10) Remove mushm password
+(11) Reboot (wait 5s)
+(12) Tertis
+(13) Advanced Mode
+EOF
+        
+        swallow_stdin
+        read -r -p "> (1-12): " choice
+        case "$choice" in
+        1) runjob /usr/bin/crosh.old ;;
+        2) runjob show_plugins ;;
+        3) runjob install_plugins ;;
+        4) runjob uninstall_plugins ;;
+        5) runjob softdisableext ;;
+        8) runjob autodisableexts ;;
+        9) runjob set_passwd ;;
+        10) runjob remove_passwd ;;
+        11) runjob reboot ;;
+        12) runjob teter ;;
+        13) runjob undam ;;
+
+    
+        *) echo && echo "Invalid option." && echo ;;
+        esac
+    done
+}
+
+main() {
+    traps
+    mushm_info
+    while true; do
+        echo -ne "\033]0;mushm\007"
+        cat <<-EOF
 (1) Root Shell                     (26) [EXPERIMENTAL] Firmware Utility
 (2) Chronos Shell                  (27) Check for updates Murkmod
 (3) Crosh                          (28) Check for updates MushM
 (4) Plugins                        (29) Tetris
-(5) Install plugins
+(5) Install plugins                (30) DA Mode
 (6) Uninstall plugins
 (7) Powerwash
 (8) Emergency Revert & Re-Enroll
@@ -174,6 +214,7 @@ EOF
         400) runjob do_dev_updates && exit 0 ;;
         f) runjob dev_fix ;;
         29) runjob teter ;;
+        30) runjob endam ;;
         101) runjob hard_disable_nokill ;;
         111) runjob hard_enable_nokill ;;
         112) runjob ext_purge ;;
@@ -205,6 +246,14 @@ doas mkdir /mnt/stateful_partition/murkmod/teter
 doas touch /mnt/stateful_partition/murkmod/teter/teteris.sh
 curl -o /mnt/stateful_partition/murkmod/teter/teteris.sh https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/games/tetris.sh
 bash /mnt/stateful_partition/murkmod/teter/teteris.sh
+}
+
+endam() {
+doas touch /mnt/stateful_partition/murkmod/dumb_ass_mode
+}
+
+undam() {
+doas rm -f /mnt/stateful_partition/murkmod/dumb_ass_mode
 }
 
 api_read_file() {
@@ -1074,11 +1123,19 @@ run_firmware_util() {
 doas "bash <(curl -L https://mrchromebox.tech/firmware-util.sh)"
     }
 
+#!/usr/bin/env bash
+
 if [ "$0" = "$BASH_SOURCE" ]; then
-    stty sane
+    if [ -t 0 ]; then
+        stty sane
+    fi
+
     if [ -f /mnt/stateful_partition/murkmod/mushm_password ]; then
         locked_main
+    elif [ -f /mnt/stateful_partition/murkmod/dumbassmode ]; then
+        dumb_ass_mode
     else
         main
     fi
 fi
+
