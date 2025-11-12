@@ -23,7 +23,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/
 ```bash
 + FM Util Script
 + Reboot
-+ Tertis
++ Tetris
 ```
 ---
 
