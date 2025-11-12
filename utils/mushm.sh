@@ -214,7 +214,7 @@ EOF
         28) runjob do_mushm_update ;;
         400) runjob do_dev_updates && exit 0 ;;
         f) runjob dev_fix ;;
-        39) runjob endam ;;
+        29) runjob endam ;;
         101) runjob hard_disable_nokill ;;
         111) runjob hard_enable_nokill ;;
         112) runjob ext_purge ;;
