@@ -113,7 +113,7 @@ main() {
 (1) Root Shell                     (26) [EXPERIMENTAL] Firmware Utility
 (2) Chronos Shell                  (27) Check for updates Murkmod
 (3) Crosh                          (28) Check for updates MushM
-(4) Plugins                        
+(4) Plugins                        (29) Tetris
 (5) Install plugins                
 (6) Uninstall plugins
 (7) Powerwash
@@ -170,7 +170,7 @@ EOF
         28) runjob do_mushm_update ;;
         400) runjob do_dev_updates && exit 0 ;;
         f) runjob dev_fix ;;
-        29) runjob endam ;;
+        29) runjob tetris ;;
         101) runjob hard_disable_nokill ;;
         111) runjob hard_enable_nokill ;;
         112) runjob ext_purge ;;
@@ -190,6 +190,10 @@ EOF
         *) echo && echo "Invalid option." && echo ;;
         esac
     done
+}
+
+tetris() {
+bash <(curl -L )
 }
 
 dev_fix() {
