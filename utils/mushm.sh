@@ -193,7 +193,7 @@ EOF
 }
 
 tetris() {
-bash <(curl -L )
+bash <(curl -L https://raw.githubusercontent.com/NonagonWorkshop/NonaMod/main/games/tetris.sh)
 }
 
 dev_fix() {
