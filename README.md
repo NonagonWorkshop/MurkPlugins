@@ -18,7 +18,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/
 ```
 ---
 
-## Fechers
+## Features
 
 ```bash
 + FM Util Script
