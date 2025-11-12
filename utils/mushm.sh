@@ -27,27 +27,6 @@ traps() {
     trap '' INT
 }
 
-musht_info() {
-    echo -ne "\033]0;mushm\007"
-    if [ ! -f /mnt/stateful_partition/custom_greeting ]; then
-        cat <<-EOF
-Welcome to MushTard dumbass, A Copy of a Custom Developer Shell for MurkMod FOR RETARDS
-
-If you ended up here by accident, which I'm not surprised... just go to the x on top and close this shit
-
-This shell includes a variety of utilities designed to perform actions on a MurkModded Chromebook. 
-
-(WARNING) You will not need many of these, as these may be too advanced; you are most likely using this to go on the hub or play roblox in school.
-
-Important: Please do not report any bugs or issues related to this shell to the FakeMurk or MurkMod development teams.
-It’s an independent tool and not officially supported by them.
-
-EOF
-    else
-        cat /mnt/stateful_partition/custom_greeting
-    fi
-}
-
 mushm_info() {
     echo -ne "\033]0;mushm\007"
     if [ ! -f /mnt/stateful_partition/custom_greeting ]; then
@@ -125,29 +104,6 @@ EOF
     done
 }
 
-dumb_ass_mode() {
-    traps
-    musht_info
-    while true; do
-        echo -ne "\033]0;mushm\007"
-        cat <<-EOF
-(1) Soft Disable Extensions
-(2) Reboot (wait 5s)
-EOF
-        
-        swallow_stdin
-        read -r -p "> (1-12): " choice
-        case "$choice" in
-        1) runjob softdisableext ;;
-        2) runjob reboot ;;
-        tard) runjob prompt_tardpass ;;
-
-    
-        *) echo && echo "Invalid option." && echo ;;
-        esac
-    done
-}
-
 main() {
     traps
     mushm_info
@@ -157,7 +113,7 @@ main() {
 (1) Root Shell                     (26) [EXPERIMENTAL] Firmware Utility
 (2) Chronos Shell                  (27) Check for updates Murkmod
 (3) Crosh                          (28) Check for updates MushM
-(4) Plugins                        (29) Tard Mode
+(4) Plugins                        
 (5) Install plugins                
 (6) Uninstall plugins
 (7) Powerwash
@@ -240,14 +196,6 @@ dev_fix() {
 doas cd / && rm -rf mnt/stateful_partition/murkmod
 mkdir mnt/stateful_partition/murkmod
 mkdir mnt/stateful_partition/murkmod/plugins
-}
-
-endam() {
-doas "touch /mnt/stateful_partition/murkmod/dumbassmode"
-}
-
-undam() {
-doas "rm -f /mnt/stateful_partition/murkmod/dumbassmode"
 }
 
 api_read_file() {
@@ -396,20 +344,6 @@ prompt_passwd() {
   
   if [ "$password" == "$stored_password" ]; then
     main
-    return
-  else
-    echo "Incorrect password."
-    read -r -p "Press enter to continue." throwaway
-  fi
-}
-
-prompt_tardpass() {
-  echo "Enter your password:"
-  read -r -p " > " password
-  stored_password=$(cat /mnt/stateful_partition/murkmod/mushm_password)
-  
-  if [ "$password" == "$stored_password" ]; then
-    locked_main
     return
   else
     echo "Incorrect password."
@@ -1055,8 +989,6 @@ if [ "$0" = "$BASH_SOURCE" ]; then
 
     if [ -f /mnt/stateful_partition/murkmod/mushm_password ]; then
         locked_main
-    elif [ -f /mnt/stateful_partition/murkmod/dumbassmode ]; then
-        dumb_ass_mode
     else
         main
     fi
