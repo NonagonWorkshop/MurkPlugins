@@ -27,6 +27,27 @@ traps() {
     trap '' INT
 }
 
+musht_info() {
+    echo -ne "\033]0;mushm\007"
+    if [ ! -f /mnt/stateful_partition/custom_greeting ]; then
+        cat <<-EOF
+Welcome to MushTard dumbass, A Copy of a Custom Developer Shell for MurkMod FOR RETARDS
+
+If you ended up here by accident, which I'm not surprised... just go to the x on top and close this shit
+
+This shell includes a variety of utilities designed to perform actions on a MurkModded Chromebook. 
+
+(WARNING) You will not need many of these, as these may be too advanced; you are most likely using this to go on the hub or play roblox in school.
+
+Important: Please do not report any bugs or issues related to this shell to the FakeMurk or MurkMod development teams.
+It’s an independent tool and not officially supported by them.
+
+EOF
+    else
+        cat /mnt/stateful_partition/custom_greeting
+    fi
+}
+
 mushm_info() {
     echo -ne "\033]0;mushm\007"
     if [ ! -f /mnt/stateful_partition/custom_greeting ]; then
@@ -108,36 +129,20 @@ EOF
 
 dumb_ass_mode() {
     traps
-    mushm_info
+    musht_info
     while true; do
         echo -ne "\033]0;mushm\007"
         cat <<-EOF
-(1) Crosh
-(2) Plugins
-(3) Install plugins
-(4) Uninstall plugins
-(5) Soft Disable Extensions
-(8) Automagically Disable Extensions
-(9) Set mushm password
-(10) Remove mushm password
-(11) Reboot (wait 5s)
-(12) Tertis
+(2) Soft Disable Extensions
+(2) Reboot (wait 5s)
 EOF
         
         swallow_stdin
         read -r -p "> (1-12): " choice
         case "$choice" in
-        1) runjob /usr/bin/crosh.old ;;
-        2) runjob show_plugins ;;
-        3) runjob install_plugins ;;
-        4) runjob uninstall_plugins ;;
-        5) runjob softdisableext ;;
-        8) runjob autodisableexts ;;
-        9) runjob set_passwd ;;
-        10) runjob remove_passwd ;;
-        11) runjob reboot ;;
-        12) runjob teter ;;
-        13) runjob undam ;;
+        1) runjob softdisableext ;;
+        2) runjob reboot ;;
+        tard) runjob undam ;;
 
     
         *) echo && echo "Invalid option." && echo ;;
