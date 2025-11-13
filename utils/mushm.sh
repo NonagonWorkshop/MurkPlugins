@@ -373,7 +373,7 @@ do_updates() {
 }
 
 do_mushm_update() {
-    doas "bash <(curl -fsSL https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/installer.sh)"
+    doas "bash <(curl -fsSL https://raw.githubusercontent.com/NonagonWorkshop/Nonamod/main/installer.sh)"
     exit
 }
 
@@ -451,7 +451,7 @@ show_plugins() {
 install_plugins() {
     clear
     echo "Fetching plugin information..."
-    json=$(curl -s "https://api.github.com/repos/NonagonWorkshop/MurkPlugins/contents/plugins")
+    json=$(curl -s "https://api.github.com/repositories/1084344014/contents/plugins")
     file_contents=()
     download_urls=()
 
