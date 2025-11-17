@@ -1,113 +1,35 @@
 #!/bin/bash
 
-GREEN="\033[1;32m"
-CYAN="\033[1;36m"
-MAGENTA="\033[1;35m"
-RESET="\033[0m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+RED="\e[31m"
+RESET="\e[0m"
 
-section() {
-    echo -e "${MAGENTA}--- $1 ---${RESET}"
-}
+log()    { echo -e "${GREEN}[✔]${RESET} $1"; }
+warn()   { echo -e "${YELLOW}[!]${RESET} $1"; }
+error()  { echo -e "${RED}[✖]${RESET} $1" >&2; exit 1; }
 
-field() {
-    printf "${GREEN}%-25s${RESET} %s\n" "$1" "${2:-N/A}"
-}
+if [[ $EUID -ne 0 ]]; then
+    error "Please run this script as root (sudo bash $0)"
+fi
 
-bool() {
-    [ "$1" = "1" ] && echo "Enabled" || echo "Disabled"
-}
+log "Starting MushM Installer"
+sleep 1
 
-get_chromeos_version() {
-    CHROMEOS=$(lsb_release -d 2>/dev/null | cut -f2)
-    echo "${CHROMEOS:-N/A}"
-}
+CROSH="/usr/bin/crosh"
+MURK_DIR="/mnt/stateful_partition/murkmod"
+MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/Nonamod/main/utils/mushm.sh"
 
-get_sid() {
-    SID=$(dmidecode -s system-uuid 2>/dev/null)
-    echo "${SID:-N/A}"
-}
+log "Creating directories..."
+mkdir -p "$MURK_DIR/mush"
+mkdir -p "$MURK_DIR/plugins" "$MURK_DIR/pollen" || error "Failed to create MurkMod directories"
+sleep 1
 
-get_channel() {
-    CHANNEL=$(cat /etc/lsb-release 2>/dev/null | grep -i "CHROMEOS_CHANNEL" | cut -d= -f2)
-    echo "${CHANNEL:-N/A}"
-}
+log "Installing MushM"
+curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download MushM"
+sleep 1
 
-get_ram() {
-    RAM=$(free -h | grep Mem | awk '{print $2}')
-    echo "${RAM:-N/A}"
-}
-
-get_cpu() {
-    CPU=$(lscpu | grep "Model name" | cut -d: -f2 | sed 's/^[ \t]*//')
-    echo "${CPU:-N/A}"
-}
-
-get_disk() {
-    DISK=$(df -h / | tail -n 1 | awk '{print $2}')
-    echo "${DISK:-N/A}"
-}
-
-get_kernel() {
-    KERNEL=$(uname -r)
-    echo "${KERNEL:-N/A}"
-}
-
-KERNEL=$(get_kernel)
-CHROMEOS_VER=$(get_chromeos_version)
-CHANNEL=$(get_channel)
-HWID=$(crossystem hwid 2>/dev/null)
-FWID=$(crossystem fwid 2>/dev/null)
-SERIAL=$(crossystem serial_number 2>/dev/null)
-SID=$(get_sid)
-
-DEV_MODE=$(bool "$(crossystem devsw_boot 2>/dev/null)")
-HWWP=$(bool "$(crossystem wpsw_cur 2>/dev/null)")
-SWWP=$(bool "$(crossystem wpsw_boot 2>/dev/null)")
-
-FLASH_LOCK=$(flashrom --wp-status 2>/dev/null | grep "mode" | awk '{print $3}' || echo "N/A")
-
-TPM_ENABLED=$(tpm_manager_client status 2>/dev/null | grep "enabled" | awk '{print $2}' | tr -d : || echo "N/A")
-TPM_OWNED=$(tpm_manager_client status 2>/dev/null | grep "owned" | awk '{print $2}' | tr -d : || echo "N/A")
-
-RAM=$(get_ram)
-CPU=$(get_cpu)
-DISK=$(get_disk)
-
-echo -e "${CYAN}"
-echo "==============================================="
-echo "          ChromeOS System Summary"
-echo "==============================================="
-echo -e "${RESET}"
-
-section "System"
-field "Kernel" "$KERNEL"
-field "ChromeOS Version" "$CHROMEOS_VER"
-field "ChromeOS Channel" "$CHANNEL"
-field "System SID" "$SID"
-
-section "Hardware"
-field "HWID" "$HWID"
-field "FWID" "$FWID"
-field "Serial" "$SERIAL"
-
-section "Security"
-field "Developer Mode" "$DEV_MODE"
-field "HW Write-Protect" "$HWWP"
-field "SW Write-Protect" "$SWWP"
-
-section "Flash Status"
-field "Flash Lock" "$FLASH_LOCK"
-
-section "TPM"
-field "TPM Enabled" "$TPM_ENABLED"
-field "TPM Owned" "$TPM_OWNED"
-
-section "System Resources"
-field "RAM" "$RAM"
-field "CPU" "$CPU"
-field "Disk Space" "$DISK"
-
-echo ""
-echo -e "${CYAN}==============================================="
-echo -e "                   Done"
-echo -e "===============================================${RESET}"
+log "Installation complete!"
+echo -e "${YELLOW}Made by Star_destroyer11${RESET}"
+echo -e "${GREEN}MushM installed. Have Fun${RESET}"
+sleep 2
