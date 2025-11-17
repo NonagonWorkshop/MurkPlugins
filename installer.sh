@@ -42,9 +42,9 @@ log "Adding Boot Script"
 curl -fsSL "$START_BOOT_URL" || error "Failed to download Boot Script"
 cp nonamod.conf /etc/init/
 touch /var/log/nonamod.log
-
 sleep 1
 
 log "Installation complete!"
 echo -e "${YELLOW}Made by Star_destroyer11${RESET}"
 echo -e "${GREEN}MushM installed. Have Fun${RESET}"
+sleep 2
