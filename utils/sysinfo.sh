@@ -18,18 +18,18 @@ bool() {
 }
 
 get_chromeos_version() {
-    CHROMEOS=$(lsb_release -d 2>/dev/null | cut -f2)
+    CHROMEOS=$(grep "CHROMEOS_VERSION" /etc/lsb-release 2>/dev/null | cut -d= -f2)
     echo "${CHROMEOS:-N/A}"
+}
+
+get_channel() {
+    CHANNEL=$(grep "CHROMEOS_CHANNEL" /etc/lsb-release 2>/dev/null | cut -d= -f2)
+    echo "${CHANNEL:-N/A}"
 }
 
 get_sid() {
     SID=$(dmidecode -s system-uuid 2>/dev/null)
     echo "${SID:-N/A}"
-}
-
-get_channel() {
-    CHANNEL=$(cat /etc/lsb-release 2>/dev/null | grep -i "CHROMEOS_CHANNEL" | cut -d= -f2)
-    echo "${CHANNEL:-N/A}"
 }
 
 get_ram() {
