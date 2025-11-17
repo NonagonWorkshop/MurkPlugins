@@ -54,11 +54,6 @@ DEV_MODE=$(bool "$(crossystem devsw_boot 2>/dev/null)")
 HWWP=$(bool "$(crossystem wpsw_cur 2>/dev/null)")
 SWWP=$(bool "$(crossystem wpsw_boot 2>/dev/null)")
 
-FLASH_LOCK=$(flashrom --wp-status 2>/dev/null | grep "mode" | awk '{print $3}' || echo "N/A")
-
-TPM_ENABLED=$(tpm_manager_client status 2>/dev/null | grep "enabled" | awk '{print $2}' | tr -d : || echo "N/A")
-TPM_OWNED=$(tpm_manager_client status 2>/dev/null | grep "owned" | awk '{print $2}' | tr -d : || echo "N/A")
-
 RAM=$(get_ram)
 CPU=$(get_cpu)
 DISK=$(get_disk)
@@ -81,13 +76,6 @@ section "Security"
 field "Developer Mode" "$DEV_MODE"
 field "HW Write-Protect" "$HWWP"
 field "SW Write-Protect" "$SWWP"
-
-section "Flash Status"
-field "Flash Lock" "$FLASH_LOCK"
-
-section "TPM"
-field "TPM Enabled" "$TPM_ENABLED"
-field "TPM Owned" "$TPM_OWNED"
 
 section "System Resources"
 field "RAM" "$RAM"
