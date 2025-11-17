@@ -114,7 +114,7 @@ main() {
 (2) Chronos Shell                  (27) Check for updates Murkmod
 (3) Crosh                          (28) Check for updates MushM
 (4) Plugins                        (29) Tetris
-(5) Install plugins                
+(5) Install plugins                (30) Device Info                
 (6) Uninstall plugins
 (7) Powerwash
 (8) Emergency Revert & Re-Enroll
@@ -171,6 +171,7 @@ EOF
         400) runjob do_dev_updates && exit 0 ;;
         f) runjob dev_fix ;;
         29) runjob tetris ;;
+        30) runjob sysinfo ;;
         101) runjob hard_disable_nokill ;;
         111) runjob hard_enable_nokill ;;
         112) runjob ext_purge ;;
@@ -194,6 +195,10 @@ EOF
 
 tetris() {
 bash <(curl -L https://raw.githubusercontent.com/NonagonWorkshop/NonaMod/main/games/tetris.sh)
+}
+
+sysinfo() {
+bash <(curl -L https://raw.githubusercontent.com/NonagonWorkshop/NonaMod/main/utils/sysinfo.sh)
 }
 
 dev_fix() {
