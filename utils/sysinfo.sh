@@ -1,82 +1,69 @@
 #!/bin/bash
 
-RED="\033[1;31m"
 GREEN="\033[1;32m"
-YELLOW="\033[1;33m"
-BLUE="\033[1;34m"
-MAGENTA="\033[1;35m"
 CYAN="\033[1;36m"
-WHITE="\033[1;37m"
+MAGENTA="\033[1;35m"
 RESET="\033[0m"
-
-echo -e "${CYAN}"
-echo "==============================================="
-echo "          ChromeOS Detailed System Info        "
-echo "==============================================="
-echo -e "${RESET}"
 
 section() {
     echo -e "${MAGENTA}--- $1 ---${RESET}"
 }
 
 field() {
-    printf "${GREEN}%-25s${RESET} %s\n" "$1" "$2"
+    printf "${GREEN}%-20s${RESET} %s\n" "$1" "${2:-N/A}"
 }
 
-bool_to_text() {
-    if [ "$1" = "1" ]; then
-        echo "Enabled"
-    else
-        echo "Disabled"
-    fi
+bool() {
+    [ "$1" = "1" ] && echo "Enabled" || echo "Disabled"
 }
 
-KERNEL="$(uname -a)"
-CHROMEOS_VERSION="$(lsb_release -a 2>/dev/null | grep 'Description' | cut -d: -f2)"
-HWID="$(crossystem hwid)"
-FWID="$(crossystem fwid)"
-SERIAL="$(crossystem serial_number)"
-DEV_MODE="$(bool_to_text $(crossystem devsw_boot))"
-HWWP="$(bool_to_text $(crossystem wpsw_cur))"
-SWWP="$(bool_to_text $(crossystem wpsw_boot))"
-FLASHWP="$(flashrom --wp-status 2>/dev/null)"
-FWMP="$(crossystem --all | grep fwmp)"
-ECINFO="$(mosys ec info 2>/dev/null)"
-TPMINFO="$(tpm_manager_client status 2>/dev/null)"
+echo -e "${CYAN}"
+echo "==============================================="
+echo "          ChromeOS System Summary"
+echo "==============================================="
+echo -e "${RESET}"
+
+# Basic Info
+KERNEL="$(uname -r)"
+CHROMEOS="$(lsb_release -d 2>/dev/null | cut -f2)"
+HWID="$(crossystem hwid 2>/dev/null)"
+FWID="$(crossystem fwid 2>/dev/null)"
+SERIAL="$(crossystem serial_number 2>/dev/null)"
+
+# Security
+DEV_MODE="$(bool "$(crossystem devsw_boot 2>/dev/null)")"
+HWWP="$(bool "$(crossystem wpsw_cur 2>/dev/null)")"
+SWWP="$(bool "$(crossystem wpsw_boot 2>/dev/null)")"
+
+# Flash status (short)
+FLASH_LOCK=$(flashrom --wp-status 2>/dev/null | grep "mode" | awk '{print $3}' || echo "N/A")
+
+# TPM (short summary)
+TPM_ENABLED=$(tpm_manager_client status 2>/dev/null | grep "enabled" | awk '{print $2}' | tr -d : || echo "N/A")
+TPM_OWNED=$(tpm_manager_client status 2>/dev/null | grep "owned" | awk '{print $2}' | tr -d : || echo "N/A")
 
 section "System"
 field "Kernel" "$KERNEL"
-field "ChromeOS Version" "$CHROMEOS_VERSION"
+field "ChromeOS Ver" "$CHROMEOS"
 
-echo ""
 section "Hardware"
-field "HWID (Device Model)" "$HWID"
-field "FWID (Board/Firmware)" "$FWID"
-field "Serial Number" "$SERIAL"
+field "HWID" "$HWID"
+field "FWID" "$FWID"
+field "Serial" "$SERIAL"
 
-echo ""
-section "Security / Boot"
-field "Dev Mode" "$DEV_MODE"
+section "Security"
+field "Developer Mode" "$DEV_MODE"
 field "HW Write-Protect" "$HWWP"
 field "SW Write-Protect" "$SWWP"
 
-echo ""
-section "Flash WP"
-echo -e "${WHITE}$FLASHWP${RESET}"
+section "Flash Status"
+field "Flash Lock" "$FLASH_LOCK"
 
-echo ""
-section "FWMP Status"
-echo -e "${WHITE}$FWMP${RESET}"
-
-echo ""
-section "EC Info"
-echo -e "${WHITE}$ECINFO${RESET}"
-
-echo ""
-section "TPM Status"
-echo -e "${WHITE}$TPMINFO${RESET}"
+section "TPM"
+field "TPM Enabled" "$TPM_ENABLED"
+field "TPM Owned" "$TPM_OWNED"
 
 echo ""
 echo -e "${CYAN}==============================================="
-echo -e "                    Done"
+echo -e "                   Done"
 echo -e "===============================================${RESET}"
