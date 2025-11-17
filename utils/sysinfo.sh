@@ -10,26 +10,14 @@ section() {
 }
 
 field() {
-    printf "${GREEN}%-25s${RESET} %s\n" "$1" "${2:-N/A}"
+    # Print the field only if the value is not "N/A"
+    if [[ "$2" != "N/A" ]]; then
+        printf "${GREEN}%-25s${RESET} %s\n" "$1" "$2"
+    fi
 }
 
 bool() {
     [ "$1" = "1" ] && echo "Enabled" || echo "Disabled"
-}
-
-get_chromeos_version() {
-    CHROMEOS=$(grep "CHROMEOS_VERSION" /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    echo "${CHROMEOS:-N/A}"
-}
-
-get_channel() {
-    CHANNEL=$(grep "CHROMEOS_CHANNEL" /etc/lsb-release 2>/dev/null | cut -d= -f2)
-    echo "${CHANNEL:-N/A}"
-}
-
-get_sid() {
-    SID=$(dmidecode -s system-uuid 2>/dev/null)
-    echo "${SID:-N/A}"
 }
 
 get_ram() {
@@ -81,14 +69,11 @@ echo -e "${RESET}"
 
 section "System"
 field "Kernel" "$KERNEL"
-field "ChromeOS Version" "$CHROMEOS_VER"
-field "ChromeOS Channel" "$CHANNEL"
 field "System SID" "$SID"
 
 section "Hardware"
 field "HWID" "$HWID"
 field "FWID" "$FWID"
-field "Serial" "$SERIAL"
 
 section "Security"
 field "Developer Mode" "$DEV_MODE"
@@ -107,8 +92,10 @@ field "RAM" "$RAM"
 field "CPU" "$CPU"
 field "Disk Space" "$DISK"
 
+# Add a pause so the user has to press Enter to continue
 echo ""
 echo -e "${CYAN}==============================================="
 echo -e "                   Done"
-echo -e "===============================================${RESET}"
-pause
+echo -e "==============================================="
+echo -e "${RESET}"
+read -p "Press Enter to exit..."
