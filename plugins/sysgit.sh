@@ -5,6 +5,8 @@ PLUGIN_DESCRIPTION="Get Sys info"
 PLUGIN_AUTHOR="Star_destroyer11"
 PLUGIN_VERSION=1
 
+Clear
+
 GREEN="\033[1;32m"
 CYAN="\033[1;36m"
 MAGENTA="\033[1;35m"
