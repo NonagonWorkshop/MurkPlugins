@@ -18,8 +18,8 @@ sleep 1
 
 CROSH="/usr/bin/crosh"
 MURK_DIR="/mnt/stateful_partition/murkmod"
-BOOT_MSG="/usr/share/chromeos-assets/text/boot_messages/en/self_repair.txt"
-MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/MurkPlugins/main/utils/mushm.sh"
+MUSHM_URL="https://raw.githubusercontent.com/NonagonWorkshop/Nonamod/main/utils/mushm.sh"
+BOOT_URL="https://raw.githubusercontent.com/NonagonWorkshop/Nonamod/main/utils/bootmsg.sh"
 
 
 log "Creating directories..."
@@ -31,15 +31,8 @@ log "Installing MushM"
 curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download MushM"
 sleep 1
 
-if [[ -w "$(dirname "$BOOT_MSG")" ]]; then
-    log "Customizing boot message..."
-    cat <<'EOF' > "$BOOT_MSG"
-Oops, your system is Fucked up. We don't know why.
-Hold tight while we try to repair it...
-EOF
-else
-    warn "Cannot modify boot message (permission denied or path missing)"
-fi
+Log "Fixing Weard Boot Message"
+curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download MushM"
 sleep 1
 
 log "Installation complete!"
