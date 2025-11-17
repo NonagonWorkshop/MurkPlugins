@@ -10,7 +10,10 @@ section() {
 }
 
 field() {
-    if [[ "$2" != "N/A" ]]; then
+    # Always print Flash Lock and TPM fields, even if they are "N/A"
+    if [[ "$1" == "Flash Lock" || "$1" == "TPM Enabled" || "$1" == "TPM Owned" ]]; then
+        printf "${GREEN}%-25s${RESET} %s\n" "$1" "$2"
+    elif [[ "$2" != "N/A" ]]; then
         printf "${GREEN}%-25s${RESET} %s\n" "$1" "$2"
     fi
 }
@@ -39,10 +42,8 @@ get_kernel() {
     echo "${KERNEL:-N/A}"
 }
 
-KERNEL=$(get_kernel)
 HWID=$(crossystem hwid 2>/dev/null)
 FWID=$(crossystem fwid 2>/dev/null)
-
 
 DEV_MODE=$(bool "$(crossystem devsw_boot 2>/dev/null)")
 HWWP=$(bool "$(crossystem wpsw_cur 2>/dev/null)")
@@ -56,10 +57,11 @@ TPM_OWNED=$(tpm_manager_client status 2>/dev/null | grep "owned" | awk '{print $
 RAM=$(get_ram)
 CPU=$(get_cpu)
 DISK=$(get_disk)
+KERNEL=$(get_kernel)
 
 echo -e "${CYAN}"
 echo "==============================================="
-echo "          ChromeOS System Information"
+echo "          ChromeOS System Summary"
 echo "==============================================="
 echo -e "${RESET}"
 
