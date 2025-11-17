@@ -10,7 +10,6 @@ section() {
 }
 
 field() {
-    # Print the field only if the value is not "N/A"
     if [[ "$2" != "N/A" ]]; then
         printf "${GREEN}%-25s${RESET} %s\n" "$1" "$2"
     fi
@@ -41,12 +40,9 @@ get_kernel() {
 }
 
 KERNEL=$(get_kernel)
-CHROMEOS_VER=$(get_chromeos_version)
-CHANNEL=$(get_channel)
 HWID=$(crossystem hwid 2>/dev/null)
 FWID=$(crossystem fwid 2>/dev/null)
-SERIAL=$(crossystem serial_number 2>/dev/null)
-SID=$(get_sid)
+
 
 DEV_MODE=$(bool "$(crossystem devsw_boot 2>/dev/null)")
 HWWP=$(bool "$(crossystem wpsw_cur 2>/dev/null)")
@@ -63,13 +59,12 @@ DISK=$(get_disk)
 
 echo -e "${CYAN}"
 echo "==============================================="
-echo "          ChromeOS System Summary"
+echo "          ChromeOS System Information"
 echo "==============================================="
 echo -e "${RESET}"
 
 section "System"
 field "Kernel" "$KERNEL"
-field "System SID" "$SID"
 
 section "Hardware"
 field "HWID" "$HWID"
