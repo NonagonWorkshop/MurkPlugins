@@ -29,7 +29,14 @@ log "Installing MushM"
 curl -fsSLo "$CROSH" "$MUSHM_URL" || error "Failed to download MushM"
 sleep 1
 
+log "Making add plugins file"
+cd /mnt/stateful_partition/murkmod
+curl -O https://raw.githubusercontent.com/placeholder
+
 log "Installation complete!"
 echo -e "${YELLOW}Made by Star_destroyer11${RESET}"
 echo -e "${GREEN}MushM installed. Have Fun${RESET}"
 sleep 2
+
+
+
