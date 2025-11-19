@@ -458,8 +458,6 @@ install_plugins() {
 
     cd /mnt/stateful_partition/murkmod/plugins
     curl -O $URL
-    
-    done
 }
 
 
