@@ -450,78 +450,15 @@ show_plugins() {
 
 install_plugins() {
     clear
-    echo "Fetching plugin information..."
-    json=$(curl -s "https://api.github.com/repositories/1084344014/contents/plugins")
-    file_contents=()
-    download_urls=()
 
-    for entry in $(echo "$json" | jq -c '.[]'); do
-        if [[ $(echo "$entry" | jq -r '.type') == "file" ]]; then
-            download_url=$(echo "$entry" | jq -r '.download_url')
-            file_contents+=("$(curl -s "$download_url")")
-            download_urls+=("$download_url")
-        fi
-    done
+    echo "Welcome, type the raw URL of the desired plugin"
+    read -p "Enter URL: " URL
 
-    plugin_info=()
-    for content in "${file_contents[@]}"; do
-        tmp_file=$(mktemp)
-        echo "$content" > "$tmp_file"
+    sleep 8
 
-        PLUGIN_NAME=$(grep -o 'PLUGIN_NAME=.*' "$tmp_file" | cut -d= -f2-)
-        PLUGIN_FUNCTION=$(grep -o 'PLUGIN_FUNCTION=.*' "$tmp_file" | cut -d= -f2-)
-        PLUGIN_DESCRIPTION=$(grep -o 'PLUGIN_DESCRIPTION=.*' "$tmp_file" | cut -d= -f2-)
-        PLUGIN_AUTHOR=$(grep -o 'PLUGIN_AUTHOR=.*' "$tmp_file" | cut -d= -f2-)
-        PLUGIN_VERSION=$(grep -o 'PLUGIN_VERSION=.*' "$tmp_file" | cut -d= -f2-)
-
-        PLUGIN_NAME=${PLUGIN_NAME:1:-1}
-        PLUGIN_FUNCTION=${PLUGIN_FUNCTION:1:-1}
-        PLUGIN_DESCRIPTION=${PLUGIN_DESCRIPTION:1:-1}
-        PLUGIN_AUTHOR=${PLUGIN_AUTHOR:1:-1}
-
-        plugin_info+=(" $PLUGIN_NAME (version $PLUGIN_VERSION by $PLUGIN_AUTHOR) \n       $PLUGIN_DESCRIPTION")
-
-        rm "$tmp_file"
-    done
-
-    clear
-    selected_option=0
-
-    while true; do
-        for i in "${!plugin_info[@]}"; do
-            if [ $i -eq $selected_option ]; then
-                printf " -> "
-            else
-                printf "    "
-            fi
-            printf "${plugin_info[$i]}"
-            filename=$(echo "${download_urls[$i]}" | rev | cut -d/ -f1 | rev)
-            if [ -f "/mnt/stateful_partition/murkmod/plugins/$filename" ]; then
-                echo " (installed)"
-            else
-                echo
-            fi
-        done
-
-        read -s -n 1 key
-
-        case "$key" in
-            "q") break ;;
-            "A") ((selected_option--)) ;;
-            "B") ((selected_option++)) ;;
-            "") clear
-                echo "Using URL: ${download_urls[$selected_option]}"
-                echo "Installing plugin..."
-                doas "mkdir -p /mnt/stateful_partition/murkmod/plugins && pushd /mnt/stateful_partition/murkmod/plugins && curl -fsO ${download_urls[$selected_option]} && popd" >/dev/null
-                echo "Installed plugin successfully!"
-                ;;
-        esac
-
-        ((selected_option = selected_option < 0 ? 0 : selected_option))
-        ((selected_option = selected_option >= ${#plugin_info[@]} ? ${#plugin_info[@]} - 1 : selected_option))
-
-        clear
-        echo "Available plugins (press q to exit):"
+    cd /mnt/stateful_partition/murkmod/plugins
+    curl -O $URL
+    
     done
 }
 
