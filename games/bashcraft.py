@@ -18,9 +18,11 @@ MAP_H = len(MAP)
 px, py = 3.5, 3.5
 pa = 0.0
 speed = 0.2
+rot_speed = 10  # degrees per press
 
-# ----- Screen (large static for terminal) -----
-W, H = 100, 40  # static large display
+# ----- Screen -----
+W, H = 60, 20  # width x height in characters (will scale 3x3)
+BLOCK_SCALE = 3
 FOV = 60
 MAX_DEPTH = 10
 
@@ -43,7 +45,7 @@ def get_map(x, y):
         return MAP[y][x]
     return '#'
 
-# ----- Draw function with shading -----
+# ----- Draw function with 3x3 blocks -----
 def draw():
     os.system('clear')
     for y in range(H):
@@ -66,44 +68,35 @@ def draw():
             floor = H//2 + wall_height//2
 
             if y < ceiling:
-                # ceiling shading
                 shade = int((y / ceiling) * 3)
-                line += '"' if shade < 1 else "'" if shade < 2 else '.'
+                char = '"' if shade < 1 else "'" if shade < 2 else '.'
             elif y <= floor:
-                # wall shading (top = lighter, bottom = darker)
                 pos_in_wall = y - ceiling
-                wall_section = wall_height
-                ratio = pos_in_wall / wall_section
+                ratio = pos_in_wall / wall_height
                 if distance_to_wall < MAX_DEPTH/4:
-                    if ratio < 0.3:
-                        line += '█'
-                    elif ratio < 0.6:
-                        line += '▓'
-                    else:
-                        line += '▒'
+                    char = '█' if ratio < 0.3 else '▓' if ratio < 0.6 else '▒'
                 elif distance_to_wall < MAX_DEPTH/2:
-                    if ratio < 0.3:
-                        line += '▓'
-                    elif ratio < 0.6:
-                        line += '▒'
-                    else:
-                        line += '░'
+                    char = '▓' if ratio < 0.3 else '▒' if ratio < 0.6 else '░'
                 else:
-                    line += '░'
+                    char = '░'
             else:
-                # floor shading
                 floor_distance = (y - H/2) / (H/2)
-                if floor_distance < 0.3:
-                    line += '.'
-                elif floor_distance < 0.6:
-                    line += ','
-                else:
-                    line += '`'
-        print(line)
+                char = '.' if floor_distance < 0.3 else ',' if floor_distance < 0.6 else '`'
+
+            # Repeat horizontally for 3x3 block effect
+            line += char * BLOCK_SCALE
+        # Repeat vertically for 3x3 block effect
+        for _ in range(BLOCK_SCALE):
+            print(line)
 
 # ----- Movement -----
-def move(dx, dy):
+def move(forward=True):
     global px, py
+    angle = math.radians(pa)
+    dx = math.cos(angle) * speed
+    dy = math.sin(angle) * speed
+    if not forward:
+        dx, dy = -dx, -dy
     nx, ny = px + dx, py + dy
     if get_map(nx, ny) != '#':
         px, py = nx, ny
@@ -113,12 +106,12 @@ while True:
     draw()
     key = getch().lower()
     if key == 'w':
-        move(math.cos(math.radians(pa))*speed, math.sin(math.radians(pa))*speed)
+        move(True)
     elif key == 's':
-        move(-math.cos(math.radians(pa))*speed, -math.sin(math.radians(pa))*speed)
+        move(False)
     elif key == 'a':
-        pa = (pa - 10) % 360
+        pa = (pa - rot_speed) % 360
     elif key == 'd':
-        pa = (pa + 10) % 360
+        pa = (pa + rot_speed) % 360
     elif key == 'q':
         break
