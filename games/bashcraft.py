@@ -19,14 +19,10 @@ px, py = 3.5, 3.5
 pa = 0.0
 speed = 0.2
 
-# ----- Terminal size -----
-def get_terminal_size():
-    try:
-        import shutil
-        size = shutil.get_terminal_size((80, 24))
-        return size.columns, size.lines - 2  # leave some room for prompt
-    except:
-        return 80, 24
+# ----- Screen (large static for terminal) -----
+W, H = 100, 40  # static large display
+FOV = 60
+MAX_DEPTH = 10
 
 # ----- Input -----
 def getch():
@@ -50,10 +46,6 @@ def get_map(x, y):
 # ----- Draw function with shading -----
 def draw():
     os.system('clear')
-    W, H = get_terminal_size()  # dynamically resize
-    FOV = 60
-    MAX_DEPTH = 10
-
     for y in range(H):
         line = ""
         for x in range(W):
