@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Mini Minecraft in Bash — first-person pseudo-3D with colors, velocity, inventory
+# Enhanced BashCraft 3D — Colored and ASCII version
 
 stty -echo -icanon time 0 min 0
 trap "stty sane; clear; exit" INT TERM EXIT
 clear
 
-# Screen & world settings
+# Screen & world
 W=40
 H=20
 FOV=1.0472
@@ -65,24 +65,24 @@ draw() {
         hit=0
         while (( hit==0 && distance_to_wall<MAX_DEPTH )); do
             distance_to_wall=$(fp_add "$distance_to_wall" "0.05")
-            test_x=$(fp_round $(fp_add "$px" $(fp_mul "$distance_to_wall" $(fp_cos "$ray_angle")))))
-            test_y=$(fp_round $(fp_add "$py" $(fp_mul "$distance_to_wall" $(fp_sin "$ray_angle")))))
+            test_x=$(fp_round "$(fp_add "$px" "$(fp_mul "$distance_to_wall" "$(fp_cos "$ray_angle")")")")
+            test_y=$(fp_round "$(fp_add "$py" "$(fp_mul "$distance_to_wall" "$(fp_sin "$ray_angle")")")")
             [[ "$(get_map $test_x $test_y)" == "#" ]] && hit=1
         done
         ceiling=$((H/2 - H/distance_to_wall))
         floor=$((H - ceiling))
         for ((y=0;y<H;y++)); do
             if ((y<ceiling)); then
-                printf "\033[44m  "  # Ceiling blue
+                printf "\033[44m^^"  # Ceiling ASCII
             elif ((y>=ceiling && y<=floor)); then
-                if (( distance_to_wall < MAX_DEPTH/4 )); then color=196
-                elif (( distance_to_wall < MAX_DEPTH/2 )); then color=202
-                elif (( distance_to_wall < MAX_DEPTH*3/4 )); then color=220
-                else color=238
+                if (( distance_to_wall < MAX_DEPTH/4 )); then color=196; char="██"
+                elif (( distance_to_wall < MAX_DEPTH/2 )); then color=202; char="▓▓"
+                elif (( distance_to_wall < MAX_DEPTH*3/4 )); then color=220; char="▒▒"
+                else color=238; char="░░"
                 fi
-                printf "\033[48;5;%dm  " "$color"
+                printf "\033[48;5;%dm%s" "$color" "$char"
             else
-                printf "\033[42m  "  # Floor green
+                printf "\033[42m::"  # Floor ASCII
             fi
         done
         printf "\033[0m\n"
@@ -93,20 +93,28 @@ draw() {
 
 # ---------- Movement ----------
 update_velocity() {
-    vx=$(fp_mul $(fp_cos "$pa") "$speed")
-    vy=$(fp_mul $(fp_sin "$pa") "$speed")
+    local cx=$(fp_cos "$pa")
+    local sy=$(fp_sin "$pa")
+    vx=$(fp_mul "$cx" "$speed")
+    vy=$(fp_mul "$sy" "$speed")
 }
 
 move_player() {
-    nx=$(fp_add "$px" "$vx")
-    ny=$(fp_add "$py" "$vy")
-    [[ "$(get_map ${nx%.*} ${ny%.*})" != "#" ]] && px=$nx && py=$ny
+    local nx=$(fp_add "$px" "$vx")
+    local ny=$(fp_add "$py" "$vy")
+    if [[ "$(get_map ${nx%.*} ${ny%.*})" != "#" ]]; then
+        px=$nx
+        py=$ny
+    fi
 }
 
 move_backward() {
-    nx=$(fp_sub "$px" "$vx")
-    ny=$(fp_sub "$py" "$vy")
-    [[ "$(get_map ${nx%.*} ${ny%.*})" != "#" ]] && px=$nx && py=$ny
+    local nx=$(fp_sub "$px" "$vx")
+    local ny=$(fp_sub "$py" "$vy")
+    if [[ "$(get_map ${nx%.*} ${ny%.*})" != "#" ]]; then
+        px=$nx
+        py=$ny
+    fi
 }
 
 # ---------- Block interaction ----------
