@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 import math, sys, tty, termios, os
+import random
 
 # ----- Map generation from 16-char seed -----
-def generate_map(seed):
-    if len(seed) != 16:
+def generate_map(seed=None):
+    if seed is None:
+        # generate random 16-character seed
+        chars = "0123456789ABCDEF"
+        seed = "".join(random.choice(chars) for _ in range(16))
+        print("Random seed:", seed)
+    elif len(seed) != 16:
         raise ValueError("Seed must be exactly 16 characters.")
+    
+    random.seed(seed)  # set RNG based on seed
     MAP = []
     for y in range(6):
         row = ""
@@ -12,16 +20,16 @@ def generate_map(seed):
             if y==0 or y==5 or x==0 or x==7:
                 row += "#"  # border
             else:
-                # pick from seed
-                idx = (y*8 + x) % 16
-                char_val = ord(seed[idx])
-                row += "#" if char_val % 2 == 0 else "."
+                row += "#" if random.random() < 0.3 else "."  # ~30% walls
         MAP.append(row)
     return MAP
 
-# ----- Ask for seed -----
-seed = input("Enter 16-character seed: ")
-MAP = generate_map(seed)
+# ----- Ask for seed or generate randomly -----
+seed_input = input("Enter 16-character seed (or leave blank for random): ").strip()
+if seed_input == "":
+    seed_input = None
+MAP = generate_map(seed_input)
+
 MAP_W = len(MAP[0])
 MAP_H = len(MAP)
 
@@ -29,7 +37,7 @@ MAP_H = len(MAP)
 px, py = 3.5, 3.5
 pa = 0.0
 speed = 0.2
-rot_speed = 10  # degrees per press
+rot_speed = 10
 
 # ----- Screen -----
 W, H = 60, 20
@@ -82,17 +90,14 @@ def draw():
             floor = H//2 + wall_height//2
 
             if y < ceiling:
-                # ceiling shading (farther is darker)
                 idx = min(int((y / ceiling) * len(SHADES)), len(SHADES)-1)
                 line += SHADES[idx] + '"' + RESET
             elif y <= floor:
-                # wall shading by distance and vertical position
                 pos_in_wall = y - ceiling
                 ratio = pos_in_wall / wall_height
                 shade_idx = min(int(distance_to_wall / MAX_DEPTH * (len(SHADES)-1) + ratio*2), len(SHADES)-1)
                 line += SHADES[shade_idx] + '█' + RESET
             else:
-                # floor shading
                 floor_distance = (y - H/2) / (H/2)
                 idx = min(int(floor_distance * (len(SHADES)-1)), len(SHADES)-1)
                 line += SHADES[idx] + '.' + RESET
