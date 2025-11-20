@@ -49,7 +49,7 @@ def draw():
     for y in range(H):
         line = ""
         for x in range(W):
-            # Compute ray angle
+            # compute ray
             ray_angle = math.radians(pa - FOV/2 + x*FOV/W)
             distance_to_wall = 0.0
             hit = False
@@ -61,27 +61,25 @@ def draw():
                     hit = True
             if distance_to_wall == 0: distance_to_wall = 0.01
 
-            # Project wall height
+            # wall height
             wall_height = int(H / distance_to_wall)
             ceiling = H//2 - wall_height//2
             floor = H//2 + wall_height//2
 
-            # Draw ceiling
             if y < ceiling:
-                line += '\033[34m"'  # blue ceiling
-            # Draw wall with shading based on distance
+                line += '\033[34m.'  # blue ceiling
             elif y <= floor:
+                # shading by distance with characters
                 if distance_to_wall < MAX_DEPTH/4:
-                    line += '\033[31m█'  # close wall red
+                    line += '\033[31m█'
                 elif distance_to_wall < MAX_DEPTH/2:
-                    line += '\033[32m▓'  # mid wall green
+                    line += '\033[31m▓'
                 elif distance_to_wall < MAX_DEPTH*3/4:
-                    line += '\033[33m▒'  # far wall yellow
+                    line += '\033[31m▒'
                 else:
-                    line += '\033[90m░'  # very far dark gray
-            # Draw floor
+                    line += '\033[31m░'
             else:
-                line += '\033[35m.'  # purple floor
+                line += '\033[32m.'  # green floor
         line += '\033[0m'
         print(line)
 
