@@ -19,10 +19,14 @@ px, py = 3.5, 3.5
 pa = 0.0
 speed = 0.2
 
-# ----- Screen -----
-W, H = 60, 25  # bigger display
-FOV = 60
-MAX_DEPTH = 10
+# ----- Terminal size -----
+def get_terminal_size():
+    try:
+        import shutil
+        size = shutil.get_terminal_size((80, 24))
+        return size.columns, size.lines - 2  # leave some room for prompt
+    except:
+        return 80, 24
 
 # ----- Input -----
 def getch():
@@ -46,6 +50,10 @@ def get_map(x, y):
 # ----- Draw function with shading -----
 def draw():
     os.system('clear')
+    W, H = get_terminal_size()  # dynamically resize
+    FOV = 60
+    MAX_DEPTH = 10
+
     for y in range(H):
         line = ""
         for x in range(W):
@@ -66,7 +74,7 @@ def draw():
             floor = H//2 + wall_height//2
 
             if y < ceiling:
-                # ceiling shading (farther is lighter)
+                # ceiling shading
                 shade = int((y / ceiling) * 3)
                 line += '"' if shade < 1 else "'" if shade < 2 else '.'
             elif y <= floor:
@@ -91,7 +99,7 @@ def draw():
                 else:
                     line += '░'
             else:
-                # floor shading (farther = darker)
+                # floor shading
                 floor_distance = (y - H/2) / (H/2)
                 if floor_distance < 0.3:
                     line += '.'
