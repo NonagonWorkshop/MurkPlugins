@@ -18,10 +18,9 @@ MAP_H = len(MAP)
 px, py = 3.5, 3.5
 pa = 0.0
 speed = 0.2
-inventory = 0
 
 # ----- Screen -----
-W, H = 20, 10  # smaller for clarity
+W, H = 40, 20
 FOV = 60
 MAX_DEPTH = 10
 
@@ -38,22 +37,19 @@ def getch():
 
 # ----- Map helpers -----
 def get_map(x,y):
-    x = int(x)
-    y = int(y)
-    if 0<=x<MAP_W and 0<=y<MAP_H: return MAP[y][x]
-    return '#'
-
-def set_map(x,y,val):
     x=int(x)
     y=int(y)
-    MAP[y] = MAP[y][:x]+val+MAP[y][x+1:]
+    if 0<=x<MAP_W and 0<=y<MAP_H:
+        return MAP[y][x]
+    return '#'
 
-# ----- Draw -----
+# ----- Draw function -----
 def draw():
     os.system('clear')
     for y in range(H):
         line = ""
         for x in range(W):
+            # Compute ray angle
             ray_angle = math.radians(pa - FOV/2 + x*FOV/W)
             distance_to_wall = 0.0
             hit = False
@@ -63,45 +59,38 @@ def draw():
                 test_y = py + distance_to_wall * math.sin(ray_angle)
                 if get_map(test_x,test_y) == '#':
                     hit = True
-            if distance_to_wall==0: distance_to_wall=0.01
-            ceiling = int(H/2 - H/distance_to_wall)
-            floor = H - ceiling
+            if distance_to_wall == 0: distance_to_wall = 0.01
+
+            # Project wall height
+            wall_height = int(H / distance_to_wall)
+            ceiling = H//2 - wall_height//2
+            floor = H//2 + wall_height//2
+
+            # Draw ceiling
             if y < ceiling:
-                line += '\033[44m '  # blue ceiling
+                line += '\033[34m"'  # blue ceiling
+            # Draw wall with shading based on distance
             elif y <= floor:
-                # single character shading for walls
                 if distance_to_wall < MAX_DEPTH/4:
-                    line += '\033[41m█'  # close wall red
+                    line += '\033[31m█'  # close wall red
                 elif distance_to_wall < MAX_DEPTH/2:
-                    line += '\033[42m▓'  # mid wall green
+                    line += '\033[32m▓'  # mid wall green
+                elif distance_to_wall < MAX_DEPTH*3/4:
+                    line += '\033[33m▒'  # far wall yellow
                 else:
-                    line += '\033[40m▒'  # far wall dark
+                    line += '\033[90m░'  # very far dark gray
+            # Draw floor
             else:
-                line += '\033[43m '  # yellow floor
+                line += '\033[35m.'  # purple floor
         line += '\033[0m'
         print(line)
-    print(f"Inventory: {inventory} | Controls: W/S/A/D X/Z Q")
 
 # ----- Movement -----
 def move(dx,dy):
-    global px,py
-    nx,ny = px+dx, py+dy
-    if get_map(nx,ny) != '#':
-        px,py = nx,ny
-
-def break_block():
-    global inventory
-    bx,by=int(px),int(py)
-    if get_map(bx,by)=='#':
-        set_map(bx,by,'.')
-        inventory+=1
-
-def place_block():
-    global inventory
-    bx,by=int(px),int(py)
-    if inventory>0 and get_map(bx,by)=='.':
-        set_map(bx,by,'#')
-        inventory-=1
+    global px, py
+    nx, ny = px + dx, py + dy
+    if get_map(nx, ny) != '#':
+        px, py = nx, ny
 
 # ----- Main loop -----
 while True:
@@ -112,12 +101,8 @@ while True:
     elif key=='s':
         move(-math.cos(math.radians(pa))*speed, -math.sin(math.radians(pa))*speed)
     elif key=='a':
-        pa=(pa-15)%360
+        pa = (pa - 10) % 360
     elif key=='d':
-        pa=(pa+15)%360
-    elif key=='x':
-        break_block()
-    elif key=='z':
-        place_block()
+        pa = (pa + 10) % 360
     elif key=='q':
         break
