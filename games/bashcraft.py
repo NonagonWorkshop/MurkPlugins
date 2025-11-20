@@ -21,7 +21,7 @@ speed = 0.2
 inventory = 0
 
 # ----- Screen -----
-W, H = 20, 10  # smaller screen
+W, H = 20, 10  # smaller for clarity
 FOV = 60
 MAX_DEPTH = 10
 
@@ -67,16 +67,17 @@ def draw():
             ceiling = int(H/2 - H/distance_to_wall)
             floor = H - ceiling
             if y < ceiling:
-                line += '\033[44m  '  # blue ceiling
+                line += '\033[44m '  # blue ceiling
             elif y <= floor:
+                # single character shading for walls
                 if distance_to_wall < MAX_DEPTH/4:
-                    line += '\033[41m██'  # close wall red
+                    line += '\033[41m█'  # close wall red
                 elif distance_to_wall < MAX_DEPTH/2:
-                    line += '\033[42m▓▓'  # mid wall green
+                    line += '\033[42m▓'  # mid wall green
                 else:
-                    line += '\033[40m▒▒'  # far wall dark
+                    line += '\033[40m▒'  # far wall dark
             else:
-                line += '\033[43m  '  # yellow floor
+                line += '\033[43m '  # yellow floor
         line += '\033[0m'
         print(line)
     print(f"Inventory: {inventory} | Controls: W/S/A/D X/Z Q")
