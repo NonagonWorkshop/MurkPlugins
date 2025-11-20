@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Terminal Minecraft clone — pure Python, no modules
+# Terminal Minecraft Clone — Raycasting 3D, ASCII, colors, pure Python
 
 import math
 import sys
@@ -35,8 +35,8 @@ speed = 0.3
 inventory = 0
 
 # ----- Screen -----
-W, H = 40, 20
-FOV = 60
+W, H = 40, 20  # columns, rows
+FOV = 60       # field of view in degrees
 MAX_DEPTH = 16
 
 # ----- Functions -----
@@ -67,25 +67,27 @@ def draw():
             test_y = py + distance * math.sin(ray_angle)
             if get_map(test_x, test_y) == '#':
                 hit = True
+        # Project wall height
+        if distance == 0: distance = 0.01
         ceiling = int(H/2 - H/distance)
         floor = H - ceiling
         line = ''
         for y in range(H):
             if y < ceiling:
-                line += '^^'
+                line += '\033[44m^^'  # ceiling blue
             elif y <= floor:
-                # wall shading by distance
+                # Wall shading by distance
                 if distance < MAX_DEPTH/4:
-                    line += '██'
+                    line += '\033[41m██'  # close wall red
                 elif distance < MAX_DEPTH/2:
-                    line += '▓▓'
+                    line += '\033[43m▓▓'  # medium wall yellow
                 elif distance < MAX_DEPTH*3/4:
-                    line += '▒▒'
+                    line += '\033[42m▒▒'  # far wall green
                 else:
-                    line += '░░'
+                    line += '\033[40m░░'  # very far wall dark
             else:
-                line += '::'
-        lines.append(line)
+                line += '\033[46m::'  # floor cyan
+        lines.append(line + '\033[0m')
     print("\033[H", end='')
     for line in lines:
         print(line)
