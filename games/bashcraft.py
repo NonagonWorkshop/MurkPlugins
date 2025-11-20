@@ -36,20 +36,19 @@ def getch():
     return ch
 
 # ----- Map helpers -----
-def get_map(x,y):
-    x=int(x)
-    y=int(y)
-    if 0<=x<MAP_W and 0<=y<MAP_H:
+def get_map(x, y):
+    x = int(x)
+    y = int(y)
+    if 0 <= x < MAP_W and 0 <= y < MAP_H:
         return MAP[y][x]
     return '#'
 
-# ----- Draw function -----
+# ----- Draw function with shading -----
 def draw():
     os.system('clear')
     for y in range(H):
         line = ""
         for x in range(W):
-            # compute ray
             ray_angle = math.radians(pa - FOV/2 + x*FOV/W)
             distance_to_wall = 0.0
             hit = False
@@ -57,34 +56,54 @@ def draw():
                 distance_to_wall += 0.05
                 test_x = px + distance_to_wall * math.cos(ray_angle)
                 test_y = py + distance_to_wall * math.sin(ray_angle)
-                if get_map(test_x,test_y) == '#':
+                if get_map(test_x, test_y) == '#':
                     hit = True
-            if distance_to_wall == 0: distance_to_wall = 0.01
+            if distance_to_wall == 0:
+                distance_to_wall = 0.01
 
-            # wall height
             wall_height = int(H / distance_to_wall)
             ceiling = H//2 - wall_height//2
             floor = H//2 + wall_height//2
 
             if y < ceiling:
-                line += '\033[34m.'  # blue ceiling
+                # ceiling shading (farther is lighter)
+                shade = int((y / ceiling) * 3)
+                line += '"' if shade < 1 else "'" if shade < 2 else '.'
             elif y <= floor:
-                # shading by distance with characters
+                # wall shading (top = lighter, bottom = darker)
+                pos_in_wall = y - ceiling
+                wall_section = wall_height
+                ratio = pos_in_wall / wall_section
                 if distance_to_wall < MAX_DEPTH/4:
-                    line += '\033[31m█'
+                    # nearest walls
+                    if ratio < 0.3:
+                        line += '█'
+                    elif ratio < 0.6:
+                        line += '▓'
+                    else:
+                        line += '▒'
                 elif distance_to_wall < MAX_DEPTH/2:
-                    line += '\033[31m▓'
-                elif distance_to_wall < MAX_DEPTH*3/4:
-                    line += '\033[31m▒'
+                    if ratio < 0.3:
+                        line += '▓'
+                    elif ratio < 0.6:
+                        line += '▒'
+                    else:
+                        line += '░'
                 else:
-                    line += '\033[31m░'
+                    line += '░'
             else:
-                line += '\033[32m.'  # green floor
-        line += '\033[0m'
+                # floor shading (farther = darker)
+                floor_distance = (y - H/2) / (H/2)
+                if floor_distance < 0.3:
+                    line += '.'
+                elif floor_distance < 0.6:
+                    line += ','
+                else:
+                    line += '`'
         print(line)
 
 # ----- Movement -----
-def move(dx,dy):
+def move(dx, dy):
     global px, py
     nx, ny = px + dx, py + dy
     if get_map(nx, ny) != '#':
@@ -94,13 +113,13 @@ def move(dx,dy):
 while True:
     draw()
     key = getch().lower()
-    if key=='w':
+    if key == 'w':
         move(math.cos(math.radians(pa))*speed, math.sin(math.radians(pa))*speed)
-    elif key=='s':
+    elif key == 's':
         move(-math.cos(math.radians(pa))*speed, -math.sin(math.radians(pa))*speed)
-    elif key=='a':
+    elif key == 'a':
         pa = (pa - 10) % 360
-    elif key=='d':
+    elif key == 'd':
         pa = (pa + 10) % 360
-    elif key=='q':
+    elif key == 'q':
         break
