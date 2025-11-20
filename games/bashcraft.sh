@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Enhanced BashCraft 3D — Colored and ASCII version
+# BashCraft 3D ASCII — fully working in terminal
 
 stty -echo -icanon time 0 min 0
-trap "stty sane; clear; exit" INT TERM EXIT
-clear
+trap "stty sane; printf '\033[?25h'; clear; exit" INT TERM EXIT
+
+printf "\033[2J\033[?25l"  # Clear screen and hide cursor
 
 # Screen & world
 W=40
@@ -58,7 +59,7 @@ set_map() { local x=$1 y=$2 val=$3; MAP[$y]="${MAP[$y]:0:x}$val${MAP[$y]:x+1}"; 
 
 # ---------- Rendering ----------
 draw() {
-    printf "\033[H"
+    printf "\033[H"  # Move cursor to top-left
     for ((x=0;x<W;x++)); do
         ray_angle=$(fp_add "$pa" "$(awk -v w=$W -v i=$x -v f=$FOV 'BEGIN{print f*(i/w-0.5)}')")
         distance_to_wall=0
@@ -73,7 +74,7 @@ draw() {
         floor=$((H - ceiling))
         for ((y=0;y<H;y++)); do
             if ((y<ceiling)); then
-                printf "\033[44m^^"  # Ceiling ASCII
+                printf "\033[44m^^"  # Ceiling
             elif ((y>=ceiling && y<=floor)); then
                 if (( distance_to_wall < MAX_DEPTH/4 )); then color=196; char="██"
                 elif (( distance_to_wall < MAX_DEPTH/2 )); then color=202; char="▓▓"
@@ -82,7 +83,7 @@ draw() {
                 fi
                 printf "\033[48;5;%dm%s" "$color" "$char"
             else
-                printf "\033[42m::"  # Floor ASCII
+                printf "\033[42m::"  # Floor
             fi
         done
         printf "\033[0m\n"
@@ -131,7 +132,6 @@ place_block() {
 }
 
 # ---------- Main loop ----------
-clear
 while true; do
     draw
     read -rsn1 key
@@ -147,4 +147,5 @@ while true; do
 done
 
 stty sane
+printf "\033[?25h"  # Show cursor
 clear
