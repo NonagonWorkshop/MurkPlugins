@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-# Terminal Minecraft Clone — Raycasting 3D, ASCII, colors, pure Python
-
-import math
-import sys
-import time
+import sys, tty, termios, math, os
 
 # ----- Map -----
 MAP = [
@@ -30,19 +26,27 @@ MAP_HEIGHT = len(MAP)
 
 # ----- Player -----
 px, py = 8.0, 8.0
-pa = 0.0  # angle in degrees
+pa = 0.0
 speed = 0.3
 inventory = 0
 
 # ----- Screen -----
-W, H = 40, 20  # columns, rows
-FOV = 60       # field of view in degrees
+W, H = 40, 20
+FOV = 60
 MAX_DEPTH = 16
 
-# ----- Functions -----
-def clear_screen():
-    print("\033[2J\033[H", end='')
+# ----- Terminal input -----
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
 
+# ----- Map helpers -----
 def get_map(x, y):
     x = int(x)
     y = int(y)
@@ -55,8 +59,9 @@ def set_map(x, y, val):
     y = int(y)
     MAP[y] = MAP[y][:x] + val + MAP[y][x+1:]
 
+# ----- Draw function -----
 def draw():
-    lines = []
+    os.system('clear')
     for x in range(W):
         ray_angle = math.radians(pa - FOV/2 + x*FOV/W)
         distance = 0.0
@@ -67,33 +72,30 @@ def draw():
             test_y = py + distance * math.sin(ray_angle)
             if get_map(test_x, test_y) == '#':
                 hit = True
-        # Project wall height
         if distance == 0: distance = 0.01
         ceiling = int(H/2 - H/distance)
         floor = H - ceiling
         line = ''
         for y in range(H):
             if y < ceiling:
-                line += '\033[44m^^'  # ceiling blue
+                line += '\033[44m  '  # blue ceiling
             elif y <= floor:
-                # Wall shading by distance
+                # wall shading with colors
                 if distance < MAX_DEPTH/4:
-                    line += '\033[41m██'  # close wall red
+                    line += '\033[41m██'  # red close
                 elif distance < MAX_DEPTH/2:
-                    line += '\033[43m▓▓'  # medium wall yellow
+                    line += '\033[43m▓▓'  # yellow
                 elif distance < MAX_DEPTH*3/4:
-                    line += '\033[42m▒▒'  # far wall green
+                    line += '\033[42m▒▒'  # green
                 else:
-                    line += '\033[40m░░'  # very far wall dark
+                    line += '\033[40m░░'  # dark
             else:
-                line += '\033[46m::'  # floor cyan
-        lines.append(line + '\033[0m')
-    print("\033[H", end='')
-    for line in lines:
-        print(line)
+                line += '\033[46m  '  # cyan floor
+        print(line + '\033[0m')
     print(f"Inventory: {inventory}")
     print("Controls: W/S forward/back, A/D rotate, X break, Z place, Q quit")
 
+# ----- Movement -----
 def move(dx, dy):
     global px, py
     nx, ny = px + dx, py + dy
@@ -115,10 +117,9 @@ def place_block():
         inventory -= 1
 
 # ----- Main loop -----
-clear_screen()
 while True:
     draw()
-    key = input("Command: ").lower()
+    key = getch().lower()
     if key == 'w':
         move(math.cos(math.radians(pa))*speed, math.sin(math.radians(pa))*speed)
     elif key == 's':
