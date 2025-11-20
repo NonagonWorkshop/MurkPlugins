@@ -3,37 +3,27 @@ import math, sys, tty, termios, os
 
 # ----- Map -----
 MAP = [
-    "################",
-    "#..............#",
-    "#..##..........#",
-    "#..............#",
-    "#......##......#",
-    "#..............#",
-    "#....#.........#",
-    "#..............#",
-    "#..............#",
-    "#..............#",
-    "#..............#",
-    "#..............#",
-    "#..............#",
-    "#..............#",
-    "#..............#",
-    "################"
+    "########",
+    "#......#",
+    "#..##..#",
+    "#......#",
+    "#......#",
+    "########"
 ]
 
 MAP_W = len(MAP[0])
 MAP_H = len(MAP)
 
 # ----- Player -----
-px, py = 8.0, 8.0
+px, py = 3.5, 3.5
 pa = 0.0
-speed = 0.3
+speed = 0.2
 inventory = 0
 
 # ----- Screen -----
-W, H = 40, 20
+W, H = 20, 10  # smaller screen
 FOV = 60
-MAX_DEPTH = 16
+MAX_DEPTH = 10
 
 # ----- Input -----
 def getch():
@@ -64,7 +54,6 @@ def draw():
     for y in range(H):
         line = ""
         for x in range(W):
-            # compute ray for this column
             ray_angle = math.radians(pa - FOV/2 + x*FOV/W)
             distance_to_wall = 0.0
             hit = False
@@ -74,23 +63,20 @@ def draw():
                 test_y = py + distance_to_wall * math.sin(ray_angle)
                 if get_map(test_x,test_y) == '#':
                     hit = True
-            # compute wall height
             if distance_to_wall==0: distance_to_wall=0.01
             ceiling = int(H/2 - H/distance_to_wall)
             floor = H - ceiling
             if y < ceiling:
-                line += '  '
+                line += '\033[44m  '  # blue ceiling
             elif y <= floor:
                 if distance_to_wall < MAX_DEPTH/4:
-                    line += '\033[41m██'  # close red
+                    line += '\033[41m██'  # close wall red
                 elif distance_to_wall < MAX_DEPTH/2:
-                    line += '\033[43m▓▓'
-                elif distance_to_wall < MAX_DEPTH*3/4:
-                    line += '\033[42m▒▒'
+                    line += '\033[42m▓▓'  # mid wall green
                 else:
-                    line += '\033[40m░░'
+                    line += '\033[40m▒▒'  # far wall dark
             else:
-                line += '  '
+                line += '\033[43m  '  # yellow floor
         line += '\033[0m'
         print(line)
     print(f"Inventory: {inventory} | Controls: W/S/A/D X/Z Q")
