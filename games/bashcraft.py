@@ -1,16 +1,27 @@
 #!/usr/bin/env python3
 import math, sys, tty, termios, os
 
-# ----- Map -----
-MAP = [
-    "########",
-    "#......#",
-    "#..##..#",
-    "#......#",
-    "#......#",
-    "########"
-]
+# ----- Map generation from 16-char seed -----
+def generate_map(seed):
+    if len(seed) != 16:
+        raise ValueError("Seed must be exactly 16 characters.")
+    MAP = []
+    for y in range(6):
+        row = ""
+        for x in range(8):
+            if y==0 or y==5 or x==0 or x==7:
+                row += "#"  # border
+            else:
+                # pick from seed
+                idx = (y*8 + x) % 16
+                char_val = ord(seed[idx])
+                row += "#" if char_val % 2 == 0 else "."
+        MAP.append(row)
+    return MAP
 
+# ----- Ask for seed -----
+seed = input("Enter 16-character seed: ")
+MAP = generate_map(seed)
 MAP_W = len(MAP[0])
 MAP_H = len(MAP)
 
@@ -21,8 +32,7 @@ speed = 0.2
 rot_speed = 10  # degrees per press
 
 # ----- Screen -----
-W, H = 60, 20  # width x height in characters (will scale 3x3)
-BLOCK_SCALE = 3
+W, H = 60, 20
 FOV = 60
 MAX_DEPTH = 10
 
@@ -45,7 +55,11 @@ def get_map(x, y):
         return MAP[y][x]
     return '#'
 
-# ----- Draw function with 3x3 blocks -----
+# ----- Shading ANSI codes (gray-scale) -----
+SHADES = ['\033[38;5;236m', '\033[38;5;240m', '\033[38;5;244m', '\033[38;5;248m', '\033[38;5;252m']
+RESET = '\033[0m'
+
+# ----- Draw function -----
 def draw():
     os.system('clear')
     for y in range(H):
@@ -68,26 +82,21 @@ def draw():
             floor = H//2 + wall_height//2
 
             if y < ceiling:
-                shade = int((y / ceiling) * 3)
-                char = '"' if shade < 1 else "'" if shade < 2 else '.'
+                # ceiling shading (farther is darker)
+                idx = min(int((y / ceiling) * len(SHADES)), len(SHADES)-1)
+                line += SHADES[idx] + '"' + RESET
             elif y <= floor:
+                # wall shading by distance and vertical position
                 pos_in_wall = y - ceiling
                 ratio = pos_in_wall / wall_height
-                if distance_to_wall < MAX_DEPTH/4:
-                    char = '█' if ratio < 0.3 else '▓' if ratio < 0.6 else '▒'
-                elif distance_to_wall < MAX_DEPTH/2:
-                    char = '▓' if ratio < 0.3 else '▒' if ratio < 0.6 else '░'
-                else:
-                    char = '░'
+                shade_idx = min(int(distance_to_wall / MAX_DEPTH * (len(SHADES)-1) + ratio*2), len(SHADES)-1)
+                line += SHADES[shade_idx] + '█' + RESET
             else:
+                # floor shading
                 floor_distance = (y - H/2) / (H/2)
-                char = '.' if floor_distance < 0.3 else ',' if floor_distance < 0.6 else '`'
-
-            # Repeat horizontally for 3x3 block effect
-            line += char * BLOCK_SCALE
-        # Repeat vertically for 3x3 block effect
-        for _ in range(BLOCK_SCALE):
-            print(line)
+                idx = min(int(floor_distance * (len(SHADES)-1)), len(SHADES)-1)
+                line += SHADES[idx] + '.' + RESET
+        print(line)
 
 # ----- Movement -----
 def move(forward=True):
