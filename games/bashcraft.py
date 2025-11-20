@@ -20,7 +20,7 @@ pa = 0.0
 speed = 0.2
 
 # ----- Screen -----
-W, H = 40, 20
+W, H = 60, 25  # bigger display
 FOV = 60
 MAX_DEPTH = 10
 
@@ -75,7 +75,6 @@ def draw():
                 wall_section = wall_height
                 ratio = pos_in_wall / wall_section
                 if distance_to_wall < MAX_DEPTH/4:
-                    # nearest walls
                     if ratio < 0.3:
                         line += '█'
                     elif ratio < 0.6:
